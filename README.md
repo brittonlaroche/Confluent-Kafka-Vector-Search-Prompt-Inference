@@ -3,7 +3,7 @@
 Basic Layout   
 
 Refer to Step 1. Data Augmentation Vector Embedding github.   
-   
+![Inference Implementation Architecture](/files/img/InferenceArchitecture.png)    
 Create topic user_questions   
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

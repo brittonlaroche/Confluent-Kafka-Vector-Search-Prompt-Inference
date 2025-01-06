@@ -132,9 +132,19 @@ curl https://api.openai.com/v1/embeddings \
 There are a few things we can do in JSON to speed things up nicely.  Tyoically you can define diffent roles (user, system, assistant)  and pass in content as prompts.  For example:   
 ```
 {"role": "user", "content": "Find me a pair of mens formal shoes in medium size."}
+```
+   
+To tell the LLM how to respond or to provide product prompts we can use the system role.   
+```
 {"role": "system", "content": "Please respond with a JSON document that has fields for product_id, store_id and price."}
 ```
-The responses from the LLM typically come back with the role of assistant.
+   
+The responses from the LLM typically come back with the role of assistant.   
+   
+Lets publish the users question in the cloud UI and see what happens.  Open the "user_questions" topic and click on the "messages" tab.  Publish a new message with the users question from above.
+
+
+
 
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

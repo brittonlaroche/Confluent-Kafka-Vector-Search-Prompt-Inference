@@ -217,6 +217,13 @@ By creating the table in FlinkSQL and defining the data types we automatically c
 insert into `user_questions_vector` select role, content, vector from `user_questions`,
 lateral table (ml_predict('vector_encoding', content));
 ```
+We can see the statement running by looking at the FLinkSQL runing statements.
+![FinkSQL Running](/files/img/flinkSQLRunning.png)   
+   
+We can see the vector created for the user's question by looking at the users_questions_vector topic.   
+![FinkSQL Running](/files/img/userQuestionsVector.png)   
+
+
 
 
 Create topic user_questions_vector   

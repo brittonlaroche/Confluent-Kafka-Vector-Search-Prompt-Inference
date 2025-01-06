@@ -24,11 +24,18 @@ The connector Acrhitectire can be used to offload additional work to the Vector 
 The setup is relatively easy.  We create some connections to the vector embedding service, the vector database and the LLM.  Then we create some topics user questions, user questions vector, user prompts, and llm Answers.  Then we populate the user questions with data either from the command line or the Web UI.  The next step is to query the vector database with the Flink SQL Federated Search Function with the user questions vector topic data. The restults from the vector search are placed into the user prompts topic.  The final step is to take the users prompts and pass them to the LLM via the Flink SQL ML_Predict function and return the results from the LLM into the LLM answers topic.
 
 ## Creating the Connections  
-We need 3 connections to make inference work with FlinkSQL. We need an embedding connection, a vector database connection and finally a connection to the LLM.
+We need 3 connections to make inference work with FlinkSQL. We need an embedding connection, a vector database connection and finally a connection to the LLM.  The connections are created in the Confluent CLI. You should issue these commands from the Confluent CLI. If you do not have the Confluent CLI, you can find the installation instructions [here](https://docs.confluent.io/confluent-cli/current/install.html). Instructions for connecting to your environment through the Confluent CLI are available [here](https://docs.confluent.io/confluent-cli/current/connect.html). 
 
 ### Vector Embedding Connection   
-
-
+```
+confluent flink connection create openai-vector-connection \
+--cloud aws \
+--region us-west-2 \
+--environment my-env-id \
+--type openai \
+--endpoint 'https://api.openai.com/v1/embeddings' \
+--api-key 'secret_key'
+```   
 
 ### Vector Database Connection   
 ```
@@ -52,6 +59,8 @@ confluent flink connection create azureopenai-cli-connection \
 --endpoint https://matrix-central.openai.azure.com/openai/deployments/matrix-central-emb
 --api-key <your-azure-api-key>
 ```
+
+
 Create topic user_questions   
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

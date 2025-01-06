@@ -166,9 +166,46 @@ WITH(
 );
 ```
 
+### Query the user_questions topic in FlinkSQL
+Opne the FlinkSQL WebUI "SQL Workspace" from the environment level or do it via command line:
+
+```
+Select * from `user_questions`;
+```
+![FinkSQL User Question](/files/img/flinkSQLUglyUserQuestions.png)   
+    
+Wow that looks horrible! What the heck is that?  Where is the user question?  Don't panic.  This happens all the time.  New developer add data to topics with out knowing what a schema registry is.  Without a schema FlinkSQL can't process the user questions. Luckily we now process schemaless data in FlinkSQL!  Well that what its called. [https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html](https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html)   
+
+How do you process schemaless events?  Its simple you ad a schema after the fact.  No, really. Lets do that now.  Go to the user_questions topic and add a data contract.  Then click the schema tab, add a new schema, make sure it is of type JSON. Add in the following Schema that defines the role and content.  We don't have to use this schema we can set any we like.  I use this schema because its easy, simple and yet powerful and I like it.
+
+```
+{
+  "additionalProperties": false,
+  "description": "user_questions schema.",
+  "properties": {
+    "content": {
+      "description": "The content provided by the role.",
+      "type": "string"
+    },
+    "role": {
+      "description": "The role for the content: user, system, assistant.",
+      "type": "string"
+    }
+  },
+  "title": "UserQuestion Record",
+  "type": "object"
+}
+```
+   
+Now lets query it again   
+   
+```
+Select * from `user_questions`;
+```
+![FinkSQL User Question](/files/img/userQuestionsReadable.png)   
+Much Better! We are ready to vector encode it!   
 
 
-Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   
 Create flink statement to vector embed user questions into user questions vector   
 Create a Federated Search using the user's questions  

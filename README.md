@@ -213,7 +213,7 @@ CREATE TABLE `user_questions_vector` (
 By creating the table in FlinkSQL and defining the data types we automatically create the topic and schema to go with it.
   
 ```
-insert into `user_questions_vector` select * from `user_questions`,
+insert into `user_questions_vector` select role, content, vector from `user_questions`,
 lateral table (ml_predict('vector_encoding', content));
 ```
 

@@ -85,13 +85,6 @@ We will be running multiple questions, vector searches, LLM responses all togeth
 Navigate to the topics menu item inside your cluster and press the "New Topic" button.  Enter "user_questions" for the topic name. Set the number of partitions to 1. Click the "Show Advanced Settings" Link. Set the retention time to 1 hour and the retension size to 1GB.  Then click save and create. We are keepingthe topics small for the demo, its not necessary but a good exercise when you are using a free tier basic cluster for a demo.  
 ![User Questions Topic](/files/img/userQuestionsTopic.png)   
 
-Do the same for the following topics:
-```
-user_questions_vector
-user_prompts
-llm_answers
-```
-
 Notice we are not setting a schema or data contract just yet.  There is a reason for this as we will see how to modify the topics and schemas for our needs in a future section.
 
 ## Vector Embed the User Questions
@@ -174,9 +167,9 @@ Select * from `user_questions`;
 ```
 ![FinkSQL User Question](/files/img/flinkSQLUglyUserQuestions.png)   
     
-Wow that looks horrible! What the heck is that?  Where is the user question?  Don't panic.  This happens all the time.  New developer add data to topics with out knowing what a schema registry is.  Without a schema FlinkSQL can't process the user questions. Luckily we now process schemaless data in FlinkSQL!  Well that what its called. [https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html](https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html)   
+Wow that looks horrible! What the heck is that?  Where is the user question?  Don't panic.  This happens all the time.  New developers add data to topics with out knowing what the schema registry is.  Without a schema FlinkSQL can't process the user questions. Luckily we now process schemaless data in FlinkSQL! [https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html](https://docs.confluent.io/cloud/current/flink/how-to-guides/process-schemaless-events.html)   
 
-How do you process schemaless events?  Its simple you ad a schema after the fact.  No, really. Lets do that now.  Go to the user_questions topic and add a data contract.  Then click the schema tab, add a new schema, make sure it is of type JSON. Add in the following Schema that defines the role and content.  We don't have to use this schema we can set any we like.  I use this schema because its easy, simple and yet powerful and I like it.
+How do you process schemaless events?  Its simple you ad a schema after the fact.  No, really.  That is how your process schemaless data in FlinkSQL, you add a schema. Lets do that now.  Go to the user_questions topic and add a data contract.  Then click the schema tab, add a new schema, make sure it is of type JSON. Add in the following Schema that defines the role and content.  We don't have to use this schema we can set any we like.  I use this schema because its easy, simple and yet powerful, and I like it.
 
 ```
 {
@@ -204,6 +197,25 @@ Select * from `user_questions`;
 ```
 ![FinkSQL User Question](/files/img/userQuestionsReadable.png)   
 Much Better! We are ready to vector encode it!   
+
+### Insert the new user question vector 
+This final step for vector encoding the users questions should be rather easy. We simply call the vector encoding funcion we created earlier and select everything from the user_questions topic. We just need a table or topic to insert into.
+
+```
+CREATE TABLE `user_questions_vector` (                       
+    `role`         STRING,                      
+    `content`      STRING,                      
+    `vector`      ARRAY<FLOAT>
+) WITH (
+  'value.format' = 'json-registry'
+);
+```  
+By creating the table in FlinkSQL and defining the data types we automatically create the topic and schema to go with it.
+  
+```
+insert into `user_questions_vector` select * from `user_questions`,
+lateral table (ml_predict('vector_encoding', content));
+```
 
 
 Create topic user_questions_vector   

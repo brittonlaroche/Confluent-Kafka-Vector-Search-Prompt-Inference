@@ -113,7 +113,8 @@ curl https://api.openai.com/v1/embeddings \
 
 [Example Vector Embedded Questions](/files/img/userQuestionsTopic.png)
 
-Take a look at some of the results of the curl commands.  [Sample Vector Searches](/files/sampleVectorSearches)You can capture your own by redirecting the output to a text file.  For example:
+Take a look at some of the results of the curl commands.  [Sample Vector Searches](/files/sampleVectorSearches)
+You can capture your own by redirecting the output to a text file.  For example:
 
 ```
 curl https://api.openai.com/v1/embeddings \

@@ -61,7 +61,7 @@ confluent flink connection create mongodb-connection \
 ### LLM Connection   
 This connects directly to the OpenAI endpoint for the LLM query
 ``` 
-confluent flink connection create azureopenai-cli-connection \
+confluent flink connection create openai-llm-connection \
 --cloud aws \
 --region us-west-2 \
 --environment my-env-id \
@@ -69,6 +69,7 @@ confluent flink connection create azureopenai-cli-connection \
 --endpoint 'https://api.openai.com/v1/chat/completions' \
 --api-key '<your-openai-api-key>'
 ```
+   
 Here is an Example of connecting to the OpenAI endpoint hosted by Microsoft in Azure:   
 ```
 confluent flink connection create azureopenai-cli-connection \

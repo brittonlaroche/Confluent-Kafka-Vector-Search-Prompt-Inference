@@ -94,6 +94,35 @@ llm_answers
 
 Notice we are not setting a schema or data contract just yet.  There is a reason for this as we will see how to modify the topics and schemas for our needs in a future section.
 
+## Capture the User Questions
+
+Lets take a moment to undertsand the vector search.  All of our product data has been converted into vectors.  Now our user is going to ask a question and we need to search based on meaning.  In order to get the meaning out of the user's question we need to vector embed the question.  Lets break this down with a curl command.  Lets say we have a user ask the following three questions or commands if you will.
+
+"Find me a pair of mens formal shoes in medium size"   
+"Show me little girl shoes in medium size"    
+"Show me several options of a cheap read summer dress in medium size"    
+   
+
+We cane take this question and call the vector embedding service to get the vector back directly.  Its a good exercize to see what we are about to do next in Flink SQL
+```
+curl https://api.openai.com/v1/embeddings \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer my-api-key" \
+ -d '{ "input": "Find me a pair of mens formal shoes in medium size", "model": "text-embedding-3-small" }'
+```
+
+[Example Vector Embedded Questions](/files/img/userQuestionsTopic.png)
+
+Take a look at some of the results of the curl commands.  [Sample Vector Searches](/files/sampleVectorSearches)You can capture your own by redirecting the output to a text file.  For example:
+
+```
+curl https://api.openai.com/v1/embeddings \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer my-api-key" \
+ -d '{ "input": "Show me little girl shoes in medium size" }' > test.txt
+```
+
+
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   
 Create flink statement to vector embed user questions into user questions vector   

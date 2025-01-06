@@ -82,7 +82,17 @@ confluent flink connection create azureopenai-cli-connection \
 We will be running multiple questions, vector searches, LLM responses all together and aysncronously through the applcation we are building.  Lets keep these topics small and clean.  We can always store them elsewhere or keep them around in topics for as long as we like.  For the purposes of this demo lets keep everything nice and tidy.
 
 ### Create the topic user_questions   
+Navigate to the topics menu item inside your cluster and press the "New Topic" button.  Enter "user_questions" for the topic name. Set the number of partitions to 1. Click the "Show Advanced Settings" Link. Set the retention time to 1 hour and the retension size to 1GB.  Then click save and create. We are keepingthe topics small for the demo, its not necessary but a good exercise when you are using a free tier basic cluster for a demo.  
+![User Questions Topic](/files/img/userQuestionsTopic.png)   
 
+Do the same for the following topics:
+```
+user_questions_vector
+user_prompts
+llm_answers
+```
+
+Notice we are not setting a schema or data contract just yet.  There is a reason for this as we will see how to modify the topics and schemas for our needs in a future section.
 
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

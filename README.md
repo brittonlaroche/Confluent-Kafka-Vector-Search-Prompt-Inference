@@ -16,10 +16,10 @@ Using Flink SQL
 ![Inference Implementation Architecture](/files/img/flinkSqlInferenceArch.png)   
 
 Using the connector Architecture
-![Inference Implementation Architecture](/files/img/RefArchitecture.png)   
-
-## Implementation Architecture
 ![Inference Implementation Architecture](/files/img/InferenceArchitecture.png)    
+
+## First Steps 
+
 Create topic user_questions   
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

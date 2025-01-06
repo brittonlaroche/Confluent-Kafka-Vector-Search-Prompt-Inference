@@ -12,10 +12,12 @@ Basic Layout
 ## Refrence Architecture
 We have two different methods of doing a vector search.  One is to use flink SQL and the Federated Search function to perform a search directly againts the vector database using a predifined connection.  The other method is to use the connector architecture to load the user's questions into the vector database and have a trigger on the vector database perform the vector search.  This github will be using the Option with Flink SQL Federated Search.
 
-Using Flink SQL
+### Using Flink SQL Federated Search    
+This is the direction we will take here in this github.  It has the fewest dependencies and is the easiestto implement:
 ![Inference Implementation Architecture](/files/img/flinkSqlInferenceArch.png)   
 
-Using the connector Architecture
+### Using the connector Architecture
+The connector Acrhitectire can be used to offload additional work to the Vector Database if you have a situation that calls for complex logic within the vector database.
 ![Inference Implementation Architecture](/files/img/InferenceArchitecture.png)    
 
 ## First Steps 

@@ -94,7 +94,7 @@ llm_answers
 
 Notice we are not setting a schema or data contract just yet.  There is a reason for this as we will see how to modify the topics and schemas for our needs in a future section.
 
-## Capture the User Questions
+## Vector Embed the User Questions
 
 Lets take a moment to undertsand the vector search.  All of our product data has been converted into vectors.  Now our user is going to ask a question and we need to search based on meaning.  In order to get the meaning out of the user's question we need to vector embed the question.  Lets break this down with a curl command.  Lets say we have a user ask the following three questions or commands if you will.
 
@@ -128,6 +128,13 @@ curl https://api.openai.com/v1/embeddings \
  -d '{ "input": "Show me little girl shoes in medium size" }' > test.txt
 ```
 
+### Publish a question to the user_questions topic
+There are a few things we can do in JSON to speed things up nicely.  Tyoically you can define diffent roles (user, system, assistant)  and pass in content as prompts.  For example:   
+```
+{"role": "user", "content": "Find me a pair of mens formal shoes in medium size."}
+{"role": "system", "content": "Please respond with a JSON document that has fields for product_id, store_id and price."}
+```
+The responses from the LLM typically come back with the role of assistant.
 
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

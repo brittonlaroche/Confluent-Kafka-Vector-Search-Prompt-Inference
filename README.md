@@ -103,11 +103,16 @@ Lets take a moment to undertsand the vector search.  All of our product data has
 "Show me several options of a cheap read summer dress in medium size"    
    
 
-We cane take this question and call the vector embedding service to get the vector back directly.  Its a good exercize to see what we are about to do next in Flink SQL
+We can take this user question and call the vector embedding service to get the vector back directly with a curl command.  Its a good exercize to see what we are about to do next in Flink SQL  Try the following, lets export your openAI api Key as a session variable and use it in the curl command.
+
+```
+export OPENAI_API_KEY="<your-api-key-here>"
+```
+
 ```
 curl https://api.openai.com/v1/embeddings \
  -H "Content-Type: application/json" \
- -H "Authorization: Bearer my-api-key" \
+ -H "Authorization: Bearer $OPENAI_API_KEY" \
  -d '{ "input": "Find me a pair of mens formal shoes in medium size", "model": "text-embedding-3-small" }'
 ```
 
@@ -119,7 +124,7 @@ You can capture your own by redirecting the output to a text file.  For example:
 ```
 curl https://api.openai.com/v1/embeddings \
  -H "Content-Type: application/json" \
- -H "Authorization: Bearer my-api-key" \
+ -H "Authorization: Bearer $OPENAI_API_KEY" \
  -d '{ "input": "Show me little girl shoes in medium size" }' > test.txt
 ```
 

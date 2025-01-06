@@ -29,6 +29,8 @@ For this github will be usingthe OpenAI vector embedding service, MongoDB Atlas 
 We need 3 connections to make inference work with FlinkSQL. We need an embedding connection, a vector database connection and finally a connection to the LLM.  The connections are created in the Confluent CLI. You should issue these commands from the Confluent CLI. If you do not have the Confluent CLI, you can find the installation instructions [here](https://docs.confluent.io/confluent-cli/current/install.html). Instructions for connecting to your environment through the Confluent CLI are available [here](https://docs.confluent.io/confluent-cli/current/connect.html). 
 
 ### Vector Embedding Connection   
+This is the same procedure used in the first github [https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)
+
 ```
 confluent flink connection create openai-vector-connection \
 --cloud aws \
@@ -40,6 +42,9 @@ confluent flink connection create openai-vector-connection \
 ```   
 
 ### Vector Database Connection   
+Run the following command to create a connection resource named “mongodb-connection” that uses your AWS credentials.  The MongoDB API key as shown in API Key Authentication [Atlas Documentation Here] (https://www.mongodb.com/docs/atlas/app-services/authentication/api-key/)   
+
+   
 ```
 confluent flink connection create mongodb-connection \
 --cloud AWS \

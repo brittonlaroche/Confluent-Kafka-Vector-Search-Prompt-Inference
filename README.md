@@ -97,12 +97,12 @@ Notice we are not setting a schema or data contract just yet.  There is a reason
 ## Vector Embed the User Questions
 
 Lets take a moment to undertsand the vector search.  All of our product data has been converted into vectors.  Now our user is going to ask a question and we need to search based on meaning.  In order to get the meaning out of the user's question we need to vector embed the question.  Lets break this down with a curl command.  Lets say we have a user ask the following three questions or commands if you will.
-
+   
 "Find me a pair of mens formal shoes in medium size"   
 "Show me little girl shoes in medium size"    
 "Show me several options of a cheap read summer dress in medium size"    
-   
-
+    
+    
 We can take this user question and call the vector embedding service to get the vector back directly with a curl command.  Its a good exercize to see what we are about to do next in Flink SQL  Try the following, lets export your openAI api Key as a session variable and use it in the curl command.
 
 ```
@@ -116,9 +116,9 @@ curl https://api.openai.com/v1/embeddings \
  -d '{ "input": "Find me a pair of mens formal shoes in medium size", "model": "text-embedding-3-small" }'
 ```
 
-[Example Vector Embedded Questions](/files/img/userQuestionsTopic.png)
 
-Take a look at some of the results of the curl commands.  [Sample Vector Searches](/files/sampleVectorSearches)
+
+Take a look at some of the results of the curl commands.  [Sample Vector Searches](/files/sampleVectorSearches)   
 You can capture your own by redirecting the output to a text file.  For example:
 
 ```
@@ -141,7 +141,12 @@ To tell the LLM how to respond or to provide product prompts we can use the syst
    
 The responses from the LLM typically come back with the role of assistant.   
    
-Lets publish the users question in the cloud UI and see what happens.  Open the "user_questions" topic and click on the "messages" tab.  Publish a new message with the users question from above.
+Lets publish the users question in the cloud UI and see what happens.  Open the "user_questions" topic and click on the "messages" tab.  Publish a new message with the users question from above. Use a key like 8888.    
+
+![Add A question ](/files/img/add_user_questions.png)   
+Now we should see a message in the user_questions topic
+
+![See the new Question](/files/img/user_questions_message.png)   
 
 
 

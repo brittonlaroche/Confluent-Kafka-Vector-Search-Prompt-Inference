@@ -30,10 +30,28 @@ We need 3 connections to make inference work with FlinkSQL. We need an embedding
 
 
 
-### Vextor Database Connection   
+### Vector Database Connection   
+```
+confluent flink connection create mongodb-connection \
+--cloud AWS \
+--region us-west-2 \
+--type mongodb \
+--endpoint <atlas endpoint like mongodb+srv://cluster0.iwuir3o.mongodb.net> \
+--api-key <mongodb-api-key> \
+--aws-access-key $AWS_ACCESS_KEY_ID \
+--aws-secret-key $AWS_SECRET_ACCESS_KEY \
+--aws-session-token $AWS_SESSION_TOKEN
+```
 
 ### LLM Connection   
-
+``` 
+confluent flink connection create azureopenai-cli-connection \
+--cloud AZURE \
+--region westus2 \
+--type azureopenai \
+--endpoint https://matrix-central.openai.azure.com/openai/deployments/matrix-central-emb
+--api-key <your-azure-api-key>
+```
 Create topic user_questions   
 Use the Confluent CLI to publish a question to the user questions topic with a guid as key   
 Create topic user_questions_vector   

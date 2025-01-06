@@ -38,7 +38,7 @@ confluent flink connection create openai-vector-connection \
 --environment my-env-id \
 --type openai \
 --endpoint 'https://api.openai.com/v1/embeddings' \
---api-key 'secret_key'
+--api-key '<your-openai-api-key>'
 ```   
 
 ### Vector Database Connection   
@@ -58,7 +58,18 @@ confluent flink connection create mongodb-connection \
 ```
 
 ### LLM Connection   
+This connects directly to the OpenAI endpoint for the LLM query
 ``` 
+confluent flink connection create azureopenai-cli-connection \
+--cloud aws \
+--region us-west-2 \
+--environment my-env-id \
+--type openai \
+--endpoint 'https://api.openai.com/v1/chat/completions' \
+--api-key '<your-openai-api-key>'
+```
+Here is an Example of connecting to the OpenAI endpoint hosted by Microsoft in Azure:   
+```
 confluent flink connection create azureopenai-cli-connection \
 --cloud AZURE \
 --region westus2 \

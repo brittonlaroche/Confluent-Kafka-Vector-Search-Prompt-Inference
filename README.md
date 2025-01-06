@@ -30,7 +30,7 @@ We need 3 connections to make inference work with FlinkSQL. We need an embedding
 
 ### Vector Embedding Connection   
 This is the same procedure used in the first github [https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)
-
+If you completed the first step then you should already have this connection. Its listed here for the sake of completeness.   
 ```
 confluent flink connection create openai-vector-connection \
 --cloud aws \
@@ -147,7 +147,24 @@ Lets publish the users question in the cloud UI and see what happens.  Open the 
 Now we should see a message in the user_questions topic
 
 ![See the new Question](/files/img/user_questions_message.png)   
+   
+Now lets query this in flink and get the Vector for the users question.   
 
+If we have not already done so in the first github we need to create the following model function to call the vector embedding service.  Log into FlinkSQL and issue the following command. 
+```
+confluent flink shell --compute-pool lfcp-pool-from-gui --environment env-myenv-from-gui
+```
+And then
+```
+CREATE MODEL `vector_encoding`
+INPUT (input STRING)
+OUTPUT (vector ARRAY<FLOAT>)
+WITH(
+  'TASK' = 'embedding',
+  'PROVIDER' = 'openai',
+  'OPENAI.CONNECTION' = 'openai-vector-connection'
+);
+```
 
 
 

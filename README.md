@@ -7,7 +7,7 @@ Inference is where we take a users question and create a vector search (semantic
 Refer to Step 1. Data Augmentation Vector Embedding github.  This github is a continuation of a previous git hub that populated a vector database.  Be sure to check it out as we are using the data generated in step 1 for vector searches in this github example.
 [https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)
 
-Basic Layout   
+This github explores the second step in Building a RAG Enabaled Gen AI application.  Inference is where we query the vector database and marry our private data with the user questions to prompt the LLM with the data it needs to make an appropriate response.
 
 ## Refrence Architecture
 We have two different methods of doing a vector search.  One is to use flink SQL and the Federated Search function to perform a search directly againts the vector database using a predifined connection.  The other method is to use the connector architecture to load the user's questions into the vector database and have a trigger on the vector database perform the vector search.  This github will be using the Option with Flink SQL Federated Search.

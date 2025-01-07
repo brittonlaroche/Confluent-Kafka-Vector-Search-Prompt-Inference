@@ -18,10 +18,10 @@ This github explores the second step in Building a RAG Enabaled Gen AI applicati
 
    1. Obtain the user content (question or statement) from the GenAI app in a topic   
    2. Vector embed the user content   
-   3. Perform a vector search against the vector database with the user content   
-   4. Prompt the LLM with the relevant data from the vector search   
+   3. Perform a vector search against the vector database with the user content (Through FlinkSQL)
+   4. Prompt the LLM with the relevant data from the vector search  (Through FlinkSQL)
    5. Place the LLM response in a topic (This topic will be used later for post processing)   
-   6. Place the final repsonse in a topic to be consumed by the GenAI app   
+   6. Place the final repsonse in a topic to be consumed by the GenAI app (We will skip this step as step 5 will be enough for Inference)  
 
 This github is a continuation of a previous github that populated a vector database.  Be sure to check it out as we are using the data generated in step 1 for vector searches in this github example. [Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)
 

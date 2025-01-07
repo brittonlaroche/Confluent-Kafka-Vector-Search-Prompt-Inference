@@ -225,6 +225,8 @@ We can see the vector created for the user's question by looking at the users_qu
       
 ![FinkSQL Running](/files/img/userQuestionsVector.png)   
 
+## Lets do a Vector Search!
+We are now ready to perform a vector search against the vector database with our new vector field in the user_questions_vector topic.  To do this we will connect to our MongoDB Atlas instance.
 
 
 

@@ -17,7 +17,7 @@ Step 4. Post Processing: [Confluent-Kafka-Vector-Search-Post-Processing](https:/
 This github explores the second step in Building a RAG Enabaled Gen AI application.  Inference is where we query the vector database and marry our private data with the user question to prompt the LLM with the data it needs to make an appropriate response.  There are a few Steps to follow:   
 
    1. Obtain the user content (question or statement) from the GenAI app in a topic   
-   2. Vector embed the user content   
+   2. Vector embed the user content (Through FlinkSQL)   
    3. Perform a vector search against the vector database with the user content (Through FlinkSQL)
    4. Prompt the LLM with the relevant data from the vector search  (Through FlinkSQL)
    5. Place the LLM response in a topic (This topic will be used later for post processing)   

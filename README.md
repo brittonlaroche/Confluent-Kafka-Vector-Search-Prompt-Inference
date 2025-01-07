@@ -219,7 +219,10 @@ lateral table (ml_predict('vector_encoding', content));
 We can see the statement running by looking at the FLinkSQL runing statements.
 ![FinkSQL Running](/files/img/flinkSQLRunning.png)   
    
+   
 We can see the vector created for the user's question by looking at the users_questions_vector topic.   
+
+      
 ![FinkSQL Running](/files/img/userQuestionsVector.png)   
 
 

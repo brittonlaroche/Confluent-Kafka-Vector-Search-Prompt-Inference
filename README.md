@@ -95,7 +95,7 @@ confluent flink connection create azureopenai-cli-connection \
 --api-key <your-azure-api-key>
 ```
 
-## Create the Topics
+## Create the user content topic
 We will be running multiple questions, vector searches, LLM responses all together and aysncronously through the applcation we are building.  Lets keep these topics small and clean.  We can always store them elsewhere or keep them around in topics for as long as we like.  For the purposes of this demo lets keep everything nice and tidy.
 
 ### Create the topic user_questions   

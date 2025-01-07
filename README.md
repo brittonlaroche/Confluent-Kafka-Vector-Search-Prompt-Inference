@@ -45,17 +45,15 @@ confluent flink connection create openai-vector-connection \
 ### Vector Database Connection   
 Run the following command to create a connection resource named “mongodb-connection” that uses your AWS credentials.  The MongoDB API key as shown in API Key Authentication [Atlas Documentation Here](https://www.mongodb.com/docs/atlas/app-services/authentication/api-key/)   
 
-   
+The Atlas endpoint resembles mongodb+srv://cluster0.iwuir3o.mongodb.net      
 ```
 confluent flink connection create mongodb-connection \
---cloud AWS \
---region us-west-2 \
---type mongodb \
---endpoint <atlas endpoint like mongodb+srv://cluster0.iwuir3o.mongodb.net> \
---api-key <mongodb-api-key> \
---aws-access-key $AWS_ACCESS_KEY_ID \
---aws-secret-key $AWS_SECRET_ACCESS_KEY \
---aws-session-token $AWS_SESSION_TOKEN
+  --cloud aws \
+  --region westus2 \
+  --type mongodb \
+  --endpoint ${atlas_endpoint} \
+  --username ${atlas_username} \
+  --password ${atlas_password}
 ```
 
 ### LLM Connection   

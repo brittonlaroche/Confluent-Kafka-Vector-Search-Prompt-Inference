@@ -126,7 +126,7 @@ You can capture your own by redirecting the output to a text file.  For example:
 curl https://api.openai.com/v1/embeddings \
  -H "Content-Type: application/json" \
  -H "Authorization: Bearer $OPENAI_API_KEY" \
- -d '{ "input": "Show me little girl shoes in medium size" }' > test.txt
+ -d '{ "input": "Show me little girl shoes in medium size" , "model": "text-embedding-3-small" }' > test.txt
 ```
 
 ### Publish a question to the user_questions topic

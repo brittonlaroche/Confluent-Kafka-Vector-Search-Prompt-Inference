@@ -3,14 +3,14 @@
 Inference is where we take a users question and create a vector search (semantic Search) against a vector database. We take the results of the vector search as prompts for the LLM.  Then we prompt the LLM with the user's question and the relevant private data returned from the vector search.  When the LLM responds we put the response into a topic to be consumed by the users application.   
    
 ![Inference Implementation Architecture](/files/img/inferenceGeneralPattern.png)  
-
+   
 ## 4 Steps to Building a GenAI Application
 There are 4 steps to building a GenAI Application and I have included a github for each step. The githubs (some still work in progress) are indexed here:   
-Step 1. Data Augmenatation: [Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)
-Step 2. Inference: [Confluent-Kafka-Vector-Search-Prompt-Inference/](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Prompt-Inference/)
-Step 3. Workflows: [Confluent-Kafka-Vector-Search-Workflows](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Workflows)
-Step 4. Post Processing: [Confluent-Kafka-Vector-Search-Post-Processing](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Post-Processing)
-
+Step 1. Data Augmenatation: [Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)   
+Step 2. Inference: [Confluent-Kafka-Vector-Search-Prompt-Inference/](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Prompt-Inference/)   
+Step 3. Workflows: [Confluent-Kafka-Vector-Search-Workflows](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Workflows)   
+Step 4. Post Processing: [Confluent-Kafka-Vector-Search-Post-Processing](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Search-Post-Processing)   
+   
 ## Description
 Refer to Step 1. Data Augmentation Vector Embedding github.  This github is a continuation of a previous git hub that populated a vector database.  Be sure to check it out as we are using the data generated in step 1 for vector searches in this github example.
 [https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding](https://github.com/brittonlaroche/Confluent-Kafka-Vector-Encoding)

@@ -303,7 +303,7 @@ CREATE TABLE mongodb_vector_search (
 );
 ```   
 
-Just in case you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following quick screen shots.  Head over to the "Search Indexes" tab above the collection data window. Then click create index.
+Just in case you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following quick screen shots.  Head over to the "Atlas Search" tab above the collection data window. Then click create index.
 
 This is what the vector index should look like if its created:  
    

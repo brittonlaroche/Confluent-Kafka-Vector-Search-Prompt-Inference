@@ -66,7 +66,7 @@ The Atlas endpoint resembles mongodb+srv://cluster0.iwuir3o.mongodb.net
 ```
 confluent flink connection create mongodb-connection \
   --cloud aws \
-  --region westus2 \
+  --region us-west-2 \
   --type mongodb \
   --endpoint ${atlas_endpoint} \
   --username ${atlas_username} \
@@ -258,7 +258,7 @@ Then run
 ```
 confluent flink connection create mongodb-connection \
   --cloud aws \
-  --region westus2 \
+  --region us-west-2 \
   --type mongodb \
   --endpoint ${atlas_endpoint} \
   --username ${atlas_username} \

@@ -265,7 +265,24 @@ confluent flink connection create mongodb-connection \
   --password ${atlas_password}
 ```
 
+We should be able to connect to MongoDB now.  But how do we do a vector search?  Well we use the Flink SQL Federated Search function. In order to call the MongoDB Atlas vector search we have to first create an external table using the MongoDB Connection we just created it looks something like this:   
 
+```
+CREATE TABLE mongodb_vector_search (
+  title STRING,
+  plot STRING
+) WITH (
+  'connector' = 'mongodb',
+  'mongodb.connection' = 'mongodb-connection',
+  'mongodb.database' = '<atlas-database-name>',
+  'mongodb.collection' = '<collection-name>',
+  'mongodb.index' = '<index-name>',
+  'mongodb.embedding_column' = '<embedding_column>',
+  'mongodb.numCandidates' = '<number-of-candidates>'
+);
+```
+
+The "title" and "plot" column or field names belong to the MongoDB sample movies collection.  Lets create a table specific to what we want returned out of the product
 
 
 Create topic user_questions_vector   

@@ -303,7 +303,7 @@ CREATE TABLE mongodb_vector_search (
 );
 ```   
 
-Just incase you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following two quick screen shots.  Head over to the "Search Indexes" tab above the collection data window. Then click create index.
+Just in case you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following quick screen shots.  Head over to the "Search Indexes" tab above the collection data window. Then click create index.
 
 This is what the vector index should look like if its created:  
    
@@ -317,7 +317,7 @@ Next fill in the field values in the JSON editor.  The index name is "vector_ind
    
 ![MongoDB Atlas Vector Index 2](/files/img/createVectorIndex2.png)  
 
-We should be ready to go!  
+We should be ready to go!  Everything is set up! Lets head over to Flink SQL and perform a vector search against the user_question_vector topic.
 
 
 Create topic user_questions_vector   

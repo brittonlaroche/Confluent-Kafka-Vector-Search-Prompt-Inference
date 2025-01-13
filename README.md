@@ -245,7 +245,16 @@ We can see the vector created for the user's question by looking at the users_qu
 ## Lets do a Vector Search!
 We are now ready to perform a vector search against the vector database with our new vector field in the user_questions_vector topic.  To do this we will connect to our MongoDB Atlas instance. We will be using the MongoDB connection we created earlier:
    
-The Atlas endpoint resembles mongodb+srv://cluster0.iwuir3o.mongodb.net      
+The Atlas endpoint resembles mongodb+srv://cluster0.iwuir3o.mongodb.net         
+for example:   
+```
+export atlas_endpoint="mongodb+srv://cluster0.iwuir3o.mongodb.net" 
+export atlas_username="demo"
+export atlas_password="bea567ssqw5"
+```
+   
+Then run  
+   
 ```
 confluent flink connection create mongodb-connection \
   --cloud aws \

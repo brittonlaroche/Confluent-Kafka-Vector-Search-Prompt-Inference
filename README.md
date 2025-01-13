@@ -277,7 +277,7 @@ CREATE TABLE mongodb_vector_search (
   'mongodb.database' = '<atlas-database-name>',
   'mongodb.collection' = '<collection-name>',
   'mongodb.index' = '<index-name>',
-  'mongodb.embedding_column' = '<embedding_column>',
+  'mongodb.path' = '<vector_embedding_column>',
   'mongodb.numCandidates' = '<number-of-candidates>'
 );
 ```
@@ -298,7 +298,7 @@ CREATE TABLE mongodb_vector_search (
   'mongodb.database' = 'retail',
   'mongodb.collection' = 'product',
   'mongodb.index' = 'vector_index',
-  'mongodb.embedding_column' = 'vector',
+  'mongodb.path' = 'vector',
   'mongodb.numCandidates' = '20'
 );
 ```   

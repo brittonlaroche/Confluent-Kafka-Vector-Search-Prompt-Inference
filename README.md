@@ -282,9 +282,40 @@ CREATE TABLE mongodb_vector_search (
 );
 ```
 
-The "title" and "plot" column or field names belong to the MongoDB sample movies collection.  Lets create a table specific to what we want returned out of the product
+The "title" and "plot" column or field names belong to the MongoDB sample movies collection.  Lets create a table specific to what we want returned out of the product collection.  We created this collection in step 1 Data Augmentation, its the end result of creating and vector embedding content to decribe the product.  Lets take a look at MongoDB Atlas and the retail.product collection.   
+   
+![MongoDB Atlas Product Collection](/files/img/retail.product.png)   
 
+We put just about everything into the content string including the store and product id.  The only thing we left out seemed to be the inventory count.  Lets pull that back so we won't recommend anything that is out of inventory. We will fill in the relevant details required for the vector search.  Example below:
 
+```
+CREATE TABLE mongodb_vector_search (
+  count INT,
+  content STRING
+) WITH (
+  'connector' = 'mongodb',
+  'mongodb.connection' = 'mongodb-connection',
+  'mongodb.database' = 'retail',
+  'mongodb.collection' = 'product',
+  'mongodb.index' = 'vector_index',
+  'mongodb.embedding_column' = 'vector',
+  'mongodb.numCandidates' = '1536'
+);
+```   
+
+Just incase you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following two quick screen shots.  Head over to the "Search Indexes" tab above the collection data window. Then click create index.
+
+This is what the vector index should look like if its created:   
+![MongoDB Atlas Vector Index 1](/files/img/vectorIndex.png)  
+
+If its not created click the "Create Index" button.  Then select "Vector Search Index"   
+   
+![MongoDB Atlas Vector Index 1](/files/img/createVectorIndex.png)  
+   
+Next fill in the field values in teh JSON editor.  We have 1536 values in the vector field, we will use "dotProduct" for our vector similarity function.  The field name tha contains the vector is not so original as its named "vector"
+   
+![MongoDB Atlas Vector Index 2](/files/img/createVectorIndex2.png)  
+   
 Create topic user_questions_vector   
 Create flink statement to vector embed user questions into user questions vector   
 Create a Federated Search using the user's questions  

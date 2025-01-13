@@ -299,7 +299,7 @@ CREATE TABLE mongodb_vector_search (
   'mongodb.collection' = 'product',
   'mongodb.index' = 'vector_index',
   'mongodb.embedding_column' = 'vector',
-  'mongodb.numCandidates' = '1536'
+  'mongodb.numCandidates' = '20'
 );
 ```   
 

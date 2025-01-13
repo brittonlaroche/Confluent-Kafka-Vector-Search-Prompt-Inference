@@ -305,17 +305,21 @@ CREATE TABLE mongodb_vector_search (
 
 Just incase you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following two quick screen shots.  Head over to the "Search Indexes" tab above the collection data window. Then click create index.
 
-This is what the vector index should look like if its created:   
+This is what the vector index should look like if its created:  
+   
 ![MongoDB Atlas Vector Index 1](/files/img/vectorIndex.png)  
 
-If its not created click the "Create Index" button.  Then select "Vector Search Index"   
+If its not created click the "Create Search Index" button.  Then select "Atlas Vector Search" and click next.   
    
 ![MongoDB Atlas Vector Index 1](/files/img/createVectorIndex.png)  
    
-Next fill in the field values in teh JSON editor.  We have 1536 values in the vector field, we will use "dotProduct" for our vector similarity function.  The field name tha contains the vector is not so original as its named "vector"
+Next fill in the field values in the JSON editor.  The index name is "vector_index". The field name that contains the vector is not so original as its named "vector," we have 1536 values in the vector field, we will use "dotProduct" for our vector similarity function.  
    
 ![MongoDB Atlas Vector Index 2](/files/img/createVectorIndex2.png)  
-   
+
+We should be ready to go!  
+
+
 Create topic user_questions_vector   
 Create flink statement to vector embed user questions into user questions vector   
 Create a Federated Search using the user's questions  

@@ -286,11 +286,11 @@ The "title" and "plot" column or field names belong to the MongoDB sample movies
    
 ![MongoDB Atlas Product Collection](/files/img/retail.product.png)   
 
-We put just about everything into the content string including the store and product id.  The only thing we left out seemed to be the inventory count.  Lets pull that back so we won't recommend anything that is out of inventory. We will fill in the relevant details required for the vector search.  Example below:
+We put just about everything into the content string including the store and product id.  The only thing we left out seemed to be the inventory count. Lets see if we can bring back the count for the prompt to the LLM. We will fill in the relevant details required for the vector search.  Example below:
 
 ```
 CREATE TABLE mongodb_vector_search (
-  count INT,
+  `count` INT,
   content STRING
 ) WITH (
   'connector' = 'mongodb',

@@ -138,6 +138,39 @@ curl https://api.openai.com/v1/embeddings \
  -d '{ "input": "Show me little girl shoes in medium size" , "model": "text-embedding-3-small" }' > test.txt
 ```
 
+What we get back is a vector embedding of the user's question that looks like the following:   
+
+```
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "index": 0,
+      "embedding": [
+        -0.0005131276,
+        0.02108516,
+        ...
+        -0.0322001,
+        -0.021097468,
+        0.015016868,
+        -0.046059933,
+        -0.01916497
+      ]
+    }
+  ],
+  "model": "text-embedding-3-small",
+  "usage": {
+    "prompt_tokens": 12,
+    "total_tokens": 12
+  }
+}
+```
+   
+The JSON document sent back from the vector embedding service contains the "data" array that we will use for our vector search.  I cut out a good number of those vectors as the embedding model so it would fit in the github. I chose text-embedding-3-small and it sends back 1536 different dimensions. If you run the same curl command you will get back different data arrays for the same question.  Thats how this works.  I would expect the same array back each time, but not so.  Dont panic.  Its ok.  Funny thing is, each different for the same question works the same.
+
+
+
 ### Publish a question to the user_questions topic
 There are a few things we can do in JSON to speed things up nicely.  Tyoically you can define diffent roles (user, system, assistant)  and pass in content as prompts.  For example:   
 ```

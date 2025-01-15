@@ -332,11 +332,11 @@ CREATE TABLE mongodb_vector_search (
   'mongodb.collection' = 'product',
   'mongodb.index' = 'vector_index',
   'mongodb.path' = 'vector',
-  'mongodb.numCandidates' = '5'
+  'mongodb.numCandidates' = '20'
 );
 ```   
 
-Notice the 'mongodb.numCandidates' = '5' I set it to return 5 canditadtes for the search.  You can play with that number it will return a much higher number.  The point here is I want to keep it small and easy to read in the GUI.  Later we will validate these products actually exist and that we have inventory in the post processing step. I want to keep it simple so the principle concepts stick.  Complexity is the enemy of learning, leave that to the real world.  If you find something is too complex in the real world, do what you can break it down into smaller easier steps.  
+Notice the 'mongodb.numCandidates' = '20' I set it to 20 canditadtes for the search. This value specifies the number of nearest neighbors to use during the search. The actual number would be determined by the specific requirements of your query and the size of your dataset. It's important to note that: The value of the nuber of candidates must be less than or equal to 10,000.  The point here is I want to keep it small and easy we don't have a huge data set.  I want to keep it simple.  Complexity is the enemy of learning, leave that to the real world.  If you find something is too complex in the real world, do what you can break it down into smaller easier steps.  
 
 Just in case you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following quick screen shots.  Head over to the "Atlas Search" tab above the collection data window. Then click create index.
 
@@ -352,7 +352,21 @@ Next fill in the field values in the JSON editor.  The index name is "vector_ind
    
 ![MongoDB Atlas Vector Index 2](/files/img/createVectorIndex2.png)  
 
-We should be ready to go!  Everything is set up! Lets head over to Flink SQL and perform a vector search against the user_question_vector topic.
+We should be ready to go!  Everything is set up! Lets head over to Flink SQL and perform a vector search against the user_question_vector topic.  We will be pulling the vector field out and passing that in the federated search much like doing a vector search manually. Below is what we could use from the MongoDB Command Line Interface (CLI) or Compass, the SDK, or the data explorer in the MongoDB Atlas GUI.
+
+```
+db.product.aggregate([
+  {
+    "$vectorSearch": {
+      "index": "vector_index",
+      "path": "vector",
+      "queryVector": [<array-of-numbers>],
+      "numCandidates": <number-of-candidates>,
+      "limit": <number-of-results>
+    }
+  }
+])
+```
 
 
 Create topic user_questions_vector   

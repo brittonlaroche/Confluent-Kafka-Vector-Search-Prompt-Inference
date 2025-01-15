@@ -332,9 +332,11 @@ CREATE TABLE mongodb_vector_search (
   'mongodb.collection' = 'product',
   'mongodb.index' = 'vector_index',
   'mongodb.path' = 'vector',
-  'mongodb.numCandidates' = '20'
+  'mongodb.numCandidates' = '5'
 );
 ```   
+
+Notice the 'mongodb.numCandidates' = '5' I set it to return 5 canditadtes for the search.  You can play with that number it will return a much higher number.  The point here is I want to keep it small and easy to read in the GUI.  Later we will validate these products actually exist and that we have inventory in the post processing step. I want to keep it simple so the principle concepts stick.  Complexity is the enemy of learning, leave that to the real world.  If you find something is too complex in the real world, do what you can break it down into smaller easier steps.  
 
 Just in case you are unfamiliar with how to create a vector index on MongoDB Atlas, I've included the following quick screen shots.  Head over to the "Atlas Search" tab above the collection data window. Then click create index.
 

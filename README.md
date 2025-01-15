@@ -167,9 +167,9 @@ What we get back is a vector embedding of the user's question that looks like th
 }
 ```
    
-The JSON document sent back from the vector embedding service contains the "data" array that we will use for our vector search.  I cut out a good number of those dimensions in the array for this readme so it would fit. I chose text-embedding-3-small and it sends back 1536 different dimensions. If you run the same curl command you will get back different data arrays for the same question.  Thats how this works.  I would expect the same array back each time, but not so.  Dont panic.  Its ok.  Funny thing is, each different for the same question works the same. It works.
+The JSON document sent back from the vector embedding service contains the "embedding" array that we will use for our vector search.  I cut out a good number of those dimensions in the array for this readme so it would fit. I chose text-embedding-3-small and it sends back 1536 different dimensions. If you run the same curl command you will get back different data arrays for the same question.  Thats how this works.  I would expect the same array back each time, but not so.  Dont panic.  Its ok.  Funny thing is, each different for the same question works the same. It works.
 
-
+   
 
 ### Publish a question to the user_questions topic
 There are a few things we can do in JSON to speed things up nicely.  Tyoically you can define diffent roles (user, system, assistant)  and pass in content as prompts.  For example:   
@@ -177,7 +177,7 @@ There are a few things we can do in JSON to speed things up nicely.  Tyoically y
 {"role": "user", "content": "Find me a pair of mens formal shoes in medium size."}
 ```
    
-To tell the LLM how to respond or to provide product prompts we can use the system role.   
+To tell the LLM how to respond or to provide product prompts we can use the system role. We use the "system" role to provide prompts to tell the LLM what to do and how to behave.  Example below:
 ```
 {"role": "system", "content": "Please respond with a JSON document that has fields for product_id, store_id and price."}
 ```

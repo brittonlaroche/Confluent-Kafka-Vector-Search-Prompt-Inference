@@ -167,8 +167,8 @@ What we get back is a vector embedding of the user's question that looks like th
 }
 ```
    
-The JSON document sent back from the vector embedding service contains the "embedding" array that we will use for our vector search.  I cut out a good number of those dimensions in the array for this readme so it would fit. I chose text-embedding-3-small and it sends back 1536 different dimensions. If you run the same curl command you will get back different data arrays for the same question.  Thats how this works.  I would expect the same array back each time, but not so.  Dont panic.  Its ok.  Funny thing is, each different for the same question works the same. It works.
-
+The JSON document sent back from the vector embedding service contains the "embedding" array that we will use for our vector search.  I cut out a good number of those dimensions in the array for this readme so it would fit. I chose text-embedding-3-small and it sends back 1536 different dimensions. If you run the same curl command you will get back different data arrays for the same question.  Thats how this works.  I would expect the same array back each time, but not so.  Dont panic.  Its ok.  Funny thing is, each different embedding array for the same user question works the same when performing a vector search. It works the same every time unless the data in the vector store itself changes.
+   
    
 
 ### Publish a question to the user_questions topic

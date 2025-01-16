@@ -280,7 +280,7 @@ We can see the vector created for the user's question by looking at the users_qu
       
 ![FinkSQL Running](/files/img/userQuestionsVector.png)   
 
-## Lets do a Vector Search!
+## Perform the Vector Search
 We are now ready to perform a vector search against the vector database with our new vector field in the user_questions_vector topic.  To do this we will connect to our MongoDB Atlas instance. We will be using the MongoDB connection we created earlier:
    
 The Atlas endpoint resembles mongodb+srv://cluster0.iwuir3o.mongodb.net         
@@ -408,10 +408,17 @@ FROM user_questions_vector,
 LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
 ```
    
-## Lets pprompt the LLM with real-time Data!
+## Prompt the LLM with real-time Data!  
 
-Create topic user_questions_vector   
-Create flink statement to vector embed user questions into user questions vector   
-Create a Federated Search using the user's questions  
-Create Flink statement to prompt the LLM and return responses in JSON format with the guid as the key, insert the results into the user answers topic.  
-Use the confluent CLI to consume the answer   
+If you have not done so already lets create the connection in the confluent CLI to connect to OpenAI to be used as the LLM.
+
+``` 
+confluent flink connection create openai-llm-connection \
+--cloud aws \
+--region us-west-2 \
+--environment my-env-id \
+--type openai \
+--endpoint 'https://api.openai.com/v1/chat/completions' \
+--api-key '<your-openai-api-key>'
+```
+

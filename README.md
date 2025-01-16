@@ -258,7 +258,8 @@ This final step for vector encoding the users questions should be rather easy. W
 ```
 CREATE TABLE `user_questions_vector` (                       
     `role`         STRING,                      
-    `content`      STRING,                      
+    `content`      STRING,
+    `sessionid`      STRING,                      
     `vector`      ARRAY<FLOAT>
 ) WITH (
   'value.format' = 'json-registry'
@@ -267,7 +268,7 @@ CREATE TABLE `user_questions_vector` (
 By creating the table in FlinkSQL and defining the data types we automatically create the topic and schema to go with it.
   
 ```
-insert into `user_questions_vector` select role, content, vector from `user_questions`,
+insert into `user_questions_vector` select role, content, sessionid, vector from `user_questions`,
 lateral table (ml_predict('vector_encoding', content));
 ```
 We can see the statement running by looking at the FLinkSQL runing statements.

@@ -259,7 +259,7 @@ This final step for vector encoding the users questions should be rather easy. W
 CREATE TABLE `user_questions_vector` (                       
     `role`         STRING,                      
     `content`      STRING,
-    `sessionid`      STRING,                      
+    `sessionid`    STRING,                      
     `vector`      ARRAY<FLOAT>
 ) WITH (
   'value.format' = 'json-registry'
@@ -328,8 +328,7 @@ We put just about everything into the content string including the store and pro
 
 ```
 CREATE TABLE mongodb_vector_search (
-  `count` INT,
-  content STRING
+  content STRING,
 ) WITH (
   'connector' = 'mongodb',
   'mongodb.connection' = 'mongodb-connection',
@@ -373,6 +372,43 @@ db.product.aggregate([
 ])
 ```
 
+   
+We can do the same thing in FlinkSQL as follows:   
+   
+When we call the FEDERATED_SEARCH function against the external table mongodb_vector_search it will perform a vector search and append the search results with to the user_questions_vector table.   
+```
+SELECT *
+FROM user_questions_vector, LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
+```
+
+Amazing, look at the results.  We just ran a vector search in real-time against MongoDB Atlas from Confluent Cloud Flink SQL! Now that we ran the vector search and saw the results of our semantic search lets store the results in a Flink Table / Topic. In the next step we can prompt the LLM with the relevant real time data by querying the user_prompts table in FlinkSQL!
+
+   
+```
+CREATE TABLE `user_prompts` (                       
+    `role`         STRING,                      
+    `content`      STRING,
+    `sessionid`    STRING,                      
+    `products` ARRAY<STRING>
+) WITH (
+  'value.format' = 'json-registry'
+);
+```
+
+Now lets take that select statement and turn it into an insert statement.  It will run forever in the background as a flink job performing vector searches against user_questions as they are submitted.
+
+```
+Insert into user_prompts (role, content, sessionid, products)
+SELECT
+  user_questions_vector.role,
+  user_questions_vector.content,
+  user_questions_vector.sessionid,
+  mongodb_vector_search.content
+FROM user_questions_vector,
+LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
+```
+   
+## Lets pprompt the LLM with real-time Data!
 
 Create topic user_questions_vector   
 Create flink statement to vector embed user questions into user questions vector   

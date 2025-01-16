@@ -421,4 +421,41 @@ confluent flink connection create openai-llm-connection \
 --endpoint 'https://api.openai.com/v1/chat/completions' \
 --api-key '<your-openai-api-key>'
 ```
+   
+Now lets create the model to pass in parameters to the OpenAI LLM to make product recommendations based on the users questions. Issue the following create model command in Flink SQL
+   
+```
+'CREATE MODEL retailassitant
+INPUT(role STRING, content STRING, products ARRAY<STRING>);
+OUTPUT(json_response STRING)
+COMMENT 'retail assistant model'
+WITH (
+  'provider' = 'openai',
+  'task' = 'classification',
+  'openai.connection' = 'openai-llm-connection',
+  'openai.model_version' = 'gpt-4.0',
+  'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items. Only use products provided. Respond with a JSON Document with your role and content and an array of products.  When recommending products only use what is given and respond with an array of json docs for products with fields for product_id and store_id.'
+);
+```
+
+All that is left is to store the LLM Response in a new table. Lets create that table.
+
+```
+CREATE TABLE `llm_answers` (                       
+    `role`         STRING,                      
+    `content`      STRING,
+    `sessionid`    STRING,                      
+    `json_response` STRING
+) WITH (
+  'value.format' = 'json-registry'
+);
+```
+        
+Now we will call the model through flink SQL and insert the answers.   
+      
+```
+insert into llm_answers (role, content, sessionid, json_response) 
+SELECT role, content, sessionid, json_response FROM user_prompts, LATERAL TABLE(ML_PREDICT('retailassitant', role, content, products));
+```   
+
 

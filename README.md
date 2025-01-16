@@ -226,12 +226,16 @@ How do you process schemaless events?  Its simple you ad a schema after the fact
   "additionalProperties": false,
   "description": "user_questions schema.",
   "properties": {
+    "role": {
+      "description": "The role for the content: user, system, assistant.",
+      "type": "string"
+    },
     "content": {
       "description": "The content provided by the role.",
       "type": "string"
     },
-    "role": {
-      "description": "The role for the content: user, system, assistant.",
+    "sessionid": {
+      "description": "The unique session identifier from the application",
       "type": "string"
     }
   },

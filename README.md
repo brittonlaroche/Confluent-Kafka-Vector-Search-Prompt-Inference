@@ -350,8 +350,6 @@ We put just about everything into the content string including the store and pro
 ```
 CREATE TABLE mongodb_vector_search (
   `content` STRING,
-  `product_id` INT,
-  `store_id` INT,
   `count` INT
 ) WITH (
   'connector' = 'mongodb',

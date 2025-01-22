@@ -467,7 +467,7 @@ Now lets create the model to pass in parameters to the OpenAI LLM to make produc
    
 ```
 CREATE MODEL retailassitant
-INPUT(role STRING, content STRING, sessionid STRING, products ARRAY<ROW<`content` STRING>>);
+INPUT(role STRING, content STRING, sessionid STRING, products ARRAY<ROW<`content` STRING>>)
 OUTPUT(json_response STRING)
 COMMENT 'retail assistant model'
 WITH (

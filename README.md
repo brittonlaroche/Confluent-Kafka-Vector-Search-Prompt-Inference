@@ -460,7 +460,7 @@ confluent flink connection create openai-llm-connection \
 --environment my-env-id \
 --type openai \
 --endpoint 'https://api.openai.com/v1/chat/completions' \
---api-key '<your-openai-api-key>'
+--api-key ${OPENAI_API_KEY}
 ```
    
 Now lets create the model to pass in parameters to the OpenAI LLM to make product recommendations based on the users questions. Issue the following create model command in Flink SQL

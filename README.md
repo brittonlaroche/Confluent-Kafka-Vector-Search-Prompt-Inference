@@ -174,7 +174,7 @@ The JSON document sent back from the vector embedding service contains the "embe
 ### Publish a question to the user_questions topic
 There are a few things we can do in JSON to speed things up nicely.  Tyoically you can define diffent roles (user, system, assistant)  and pass in content as prompts.  For example:   
    
-{"role": "user", "content": "Find me a pair of mens formal shoes in medium size.", "sessionid": "abc123"}
+{"role": "user", "content": "Find me a pair of mens formal shoes in medium size.", "sessionid": "abc123", email: "bob@example.com"}
    
       
 To tell the LLM how to respond or to provide product prompts we can use the system role. We use the "system" role to provide prompts to tell the LLM what to do and how to behave.  Example below:
@@ -187,7 +187,7 @@ The responses from the LLM typically come back with the role of assistant.
 Lets publish the users question in the cloud UI and see what happens.  Open the "user_questions" topic and click on the "messages" tab.  Publish a new message with the users question from below. If you desire use a key like 8888. We are not using the session identifier yet, just know its a way to identify the conversation history in the user_questions topic.    
 
 ```
-{"role": "user", "content": "Find me a pair of mens formal shoes in medium size.", "sessionid": "abc123"}
+{"role": "user", "content": "Find me a pair of mens formal shoes in medium size.", "sessionid": "abc123", email: "bob@example.com"}
 ```
 ![Add A question ](/files/img/add_user_questions.png)   
 Now we should see a message in the user_questions topic
@@ -239,6 +239,10 @@ How do you process schemaless events?  Its simple you ad a schema after the fact
     },
     "sessionid": {
       "description": "The unique session identifier from the application",
+      "type": "string"
+    }
+   "email": {
+      "description": "The email address of the user. We will not send this field to the LLM",
       "type": "string"
     }
   },
@@ -439,6 +443,10 @@ SELECT
   search_results as products
 FROM user_questions_vector,
 LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
+```
+
+```
+select * from user_prompts;
 ```
    
 ## Prompt the LLM with real-time Data!  

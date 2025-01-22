@@ -466,8 +466,8 @@ confluent flink connection create openai-llm-connection \
 Now lets create the model to pass in parameters to the OpenAI LLM to make product recommendations based on the users questions. Issue the following create model command in Flink SQL
    
 ```
-'CREATE MODEL retailassitant
-INPUT(role STRING, content STRING, products ARRAY<STRING>);
+CREATE MODEL retailassitant
+INPUT(role STRING, content STRING, sessionid STRING, products ARRAY<ROW<`content` STRING>>);
 OUTPUT(json_response STRING)
 COMMENT 'retail assistant model'
 WITH (
@@ -475,7 +475,7 @@ WITH (
   'task' = 'classification',
   'openai.connection' = 'openai-llm-connection',
   'openai.model_version' = 'gpt-4.0',
-  'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items. Only use products provided. Respond with a JSON Document with your role and content and an array of products.  When recommending products only use what is given and respond with an array of json docs for products with fields for product_id and store_id.'
+  'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items. Only use products provided.  When recommending products only use what is given and respond with a json document with a field called role and a value of assistant, the natural language response in a field called content, a field for sessionid, a product field with an array of products with fields for product_id and store_id, price and a description.'
 );
 ```
 

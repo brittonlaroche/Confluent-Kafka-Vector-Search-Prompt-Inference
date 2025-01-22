@@ -291,13 +291,23 @@ export atlas_username="demo"
 export atlas_password="bea567ssqw5"
 ```
    
-Then run  
+We can reuse the mongodb-connection created earlier but I have seen so many errors like the one below lets create a new connection and specify the --environment flag.
    
 ```
-confluent flink connection create mongodb-connection \
+Statement name: cli-2025-01-22-004101-bbaf2d4f-ba18-44e6-ada9-092870ebf991
+Submitting statement...Error: statement submission failed
+Error: can't fetch results. Statement phase is: FAILED
+Error details: Connection 'mongodb-connection' not found
+```  
+
+This error occurs because we created the connection in a different flink SQL environment.  Lets be safe and use the correct environment.
+      
+```
+confluent flink connection create mongodb-fed-search-connection \
   --cloud aws \
   --region us-west-2 \
   --type mongodb \
+  --environment my-environment-id
   --endpoint ${atlas_endpoint} \
   --username ${atlas_username} \
   --password ${atlas_password}
@@ -334,7 +344,7 @@ CREATE TABLE mongodb_vector_search (
   `count` INT
 ) WITH (
   'connector' = 'mongodb',
-  'mongodb.connection' = 'mongodb-connection',
+  'mongodb.connection' = 'mongodb-fed-search-connection',
   'mongodb.database' = 'retail',
   'mongodb.collection' = 'product',
   'mongodb.index' = 'vector_index',

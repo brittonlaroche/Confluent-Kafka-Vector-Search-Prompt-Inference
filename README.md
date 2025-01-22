@@ -240,7 +240,7 @@ How do you process schemaless events?  Its simple you ad a schema after the fact
     "sessionid": {
       "description": "The unique session identifier from the application",
       "type": "string"
-    }
+    },
    "email": {
       "description": "The email address of the user. We will not send this field to the LLM",
       "type": "string"

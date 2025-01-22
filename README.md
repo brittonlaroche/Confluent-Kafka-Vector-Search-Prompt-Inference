@@ -269,9 +269,17 @@ CREATE TABLE `user_questions_vector` (
 );
 ```  
 By creating the table in FlinkSQL and defining the data types we automatically create the topic and schema to go with it.
-  
+Lets test the vector encoding function.
+   
 ```
-insert into `user_questions_vector` select role, content, sessionid, vector from `user_questions`,
+select `role`, `content`, `sessionid`, `vector` from `user_questions`,
+lateral table (ml_predict('vector_encoding', content));
+```
+   
+It seems to be working, so lets insert the data into the user_questions_vector topic.   
+   
+```
+insert into `user_questions_vector` select `role`, `content`, `sessionid`, `vector` from `user_questions`,
 lateral table (ml_predict('vector_encoding', content));
 ```
 We can see the statement running by looking at the FLinkSQL runing statements.

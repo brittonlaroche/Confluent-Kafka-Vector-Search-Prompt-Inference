@@ -306,7 +306,7 @@ confluent flink connection create mongodb-connection \
 We should be able to connect to MongoDB now.  But how do we do a vector search?  Well we use the Flink SQL Federated Search function. In order to call the MongoDB Atlas vector search we have to first create an external table using the MongoDB Connection we just created it looks something like this:   
 
 ```
-CREATE TABLE mongodb_vector_search (
+CREATE TABLE mongodb_vector_search_example (
   title STRING,
   plot STRING
 ) WITH (

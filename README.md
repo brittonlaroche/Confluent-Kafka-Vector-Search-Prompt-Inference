@@ -345,12 +345,11 @@ The "title" and "plot" column or field names belong to the MongoDB sample movies
    
 ![MongoDB Atlas Product Collection](/files/img/retail.product.png)   
 
-We put just about everything into the content string including the store and product id.  The only thing we left out seemed to be the inventory count. Lets see if we can bring back the count for the prompt to the LLM. We will fill in the relevant details required for the vector search.  Example below:
+We put just about everything into the content string including the store and product id.  The only thing we left out seemed to be the inventory count. Lets see if we can bring back the count for the prompt to the LLM. We can bring back many fields. For now lets just get the content.  We will fill in the relevant details required for the vector search.  Example below:
 
 ```
 CREATE TABLE mongodb_vector_search (
-  `content` STRING,
-  `count` INT
+  `content` STRING
 ) WITH (
   'connector' = 'mongodb',
   'mongodb.connection' = 'mongodb-fed-search-connection',
@@ -411,10 +410,22 @@ CREATE TABLE `user_prompts` (
     `role`         STRING,                      
     `content`      STRING,
     `sessionid`    STRING,                      
-    `products` ARRAY<STRING>
+    `products` ARRAY<ROW<`content` STRING>>
 ) WITH (
   'value.format' = 'json-registry'
 );
+```
+
+Lets take a look at each field as a sql column and se what we get.   
+   
+```
+SELECT
+  user_questions_vector.role,
+  user_questions_vector.content,
+  user_questions_vector.sessionid,
+  search_results as products
+FROM user_questions_vector,
+LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
 ```
 
 Now lets take that select statement and turn it into an insert statement.  It will run forever in the background as a flink job performing vector searches against user_questions as they are submitted.
@@ -425,7 +436,7 @@ SELECT
   user_questions_vector.role,
   user_questions_vector.content,
   user_questions_vector.sessionid,
-  mongodb_vector_search.content
+  search_results as products
 FROM user_questions_vector,
 LATERAL TABLE(FEDERATED_SEARCH('mongodb_vector_search', 3, vector));
 ```

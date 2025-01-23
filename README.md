@@ -496,7 +496,14 @@ Now we will call the model through flink SQL and insert the answers.
       
 ```
 insert into llm_answers (role, content, sessionid, json_response) 
-SELECT role, content, sessionid, json_response FROM user_prompts, LATERAL TABLE(ML_PREDICT('retailassitant', role, content, products));
+SELECT role, content, sessionid, json_response FROM user_prompts, 
+LATERAL TABLE(ML_PREDICT('retailassitant', concat_ws(' ', 
+      ', role: '||role,
+      ', content: '||content,	
+      ', products: '||cast(products as string))			
+    )
+  )
+);
 ```   
 
 

@@ -502,8 +502,7 @@ LATERAL TABLE(ML_PREDICT('retailassitant', concat_ws(' ',
       ', content: '||content,	
       ', products: '||cast(products as string))			
     )
-  )
-);
+  );
 ```   
 
 

@@ -491,8 +491,18 @@ CREATE TABLE `llm_answers` (
   'value.format' = 'json-registry'
 );
 ```
-        
+     
+Lets combine the user prompts into a single flat json document.  We should probably create a suer defined function for this but it should be easy enough with just SQL functions.   
+
+```sql
+select json_unquote(concat_ws(' ',
+      '"role": '||'"'||role||'"',
+      ', "content": '||'"'||content||'"',
+      ', "products": '||'"'||cast(products as string)||'"')) as request_str from user_prompts;
+```
+           
 Now we will call the model through flink SQL and insert the answers.   
+   
       
 ```
 insert into llm_answers (role, content, sessionid, json_response) 

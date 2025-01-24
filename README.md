@@ -601,7 +601,7 @@ Lets try that again. We need to delete the entire schema and start over. Go back
 CREATE TABLE `llm_prompt_test` (
     `sessionid`                STRING,
     `llm_request_json_string`  STRING,
-    `llm_request_json_object`  ARRAY<ROW<`role` STRING, `content` STRING, `sessionid` STRING, `products` ARRAY<ROW<`content` STRING>>>
+    `llm_request_json_object`  ARRAY<ROW<`role` STRING, `content` STRING, `sessionid` STRING, `products` ARRAY<ROW<`content` STRING>>>>
 ) WITH (
   'value.format' = 'json-registry'
 );

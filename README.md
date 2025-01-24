@@ -475,7 +475,7 @@ WITH (
   'task' = 'classification',
   'openai.connection' = 'openai-llm-connection',
   'openai.model_version' = 'gpt-4.0',
-  'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items. Only use products provided.  When recommending products only use what is given and respond with a json document with a field called role and a value of assistant, the natural language response in a field called content, a field for sessionid, a product field with an array of products with fields for product_id and store_id, price and a description.'
+  'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items.'
 );
 ```
 
@@ -491,7 +491,11 @@ CREATE TABLE `llm_answers` (
   'value.format' = 'json-registry'
 );
 ```
-     
+
+### Working with JSON
+
+It is easy to get caught with errors treating a JSON object as a string and treating a string as a JSON object in Flink SQL. This is especially important in communicating with LLM's and other external systems expecting JSON.  In many cases the developers of the underlying systems and fucntions will translate for you. But in some cases you might be stuck scratching your head for hours trying to figure out what went wrong at various levels of the application stack with an obscure error message. We need to learn and practice this skill of converting strings to JSON and vice versa and be familiar with the JSON object functions in Flink SQL. The necessary documentation is here: https://docs.confluent.io/cloud/current/flink/reference/functions/json-functions.html
+
 Lets combine the user prompts into a single flat json document.  We should probably create a user defined function for this but it should be easy enough with just Flink SQL functions.   
 
 ```sql
@@ -500,7 +504,70 @@ select json_object('role' VALUE role,
   'products' VALUE cast(products as string)) as request_json
 from user_prompts;
 ```
-           
+
+Simple enough right?  We can store this as a json object in a Flink SQL table right?  Lets try this with a simple test.
+
+We will create a test topic called "llm_prompt_test" and assign it the following schema just like we did with the user_questions topic at the start of this git hub.
+
+Copy and paste the following JSON schema into the llm_prompt_test topic's schema under "data contracts":
+```json
+{
+  "$id": "http://example.com/myURI.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "description": "Sample schema to help you get started.",
+  "properties": {
+    "llm_request_json_object": {
+      "description": "The full JSON request document sent to the llm stored as a JSON Object",
+      "type": "object"
+    },
+    "llm_request_json_string": {
+      "description": "The full JSON request document sent to the llm stored as a string",
+      "type": "string"
+    },
+    "sessionid": {
+      "description": "application sessionid used for keeping context",
+      "type": "string"
+    }
+  },
+  "title": "SampleRecord",
+  "type": "object"
+}
+```
+
+Now lets describe the llm_prompt_test as its referenced as a table in Flink SQL.
+
+```sql
+> desc `llm_prompt_test`;
+Statement name: cli-2025-01-24-053408-01d49c59-3ceb-4575-be47-801e4486226d
+Submitting statement...Statement successfully submitted.
+Waiting for statement to be ready. Statement phase is COMPLETED.
+Statement phase is COMPLETED.
++-------------------------+-----------+----------+------------+------------------------------------------------------------------------+
+|       Column Name       | Data Type | Nullable |   Extras   |                                Comment                                 |
++-------------------------+-----------+----------+------------+------------------------------------------------------------------------+
+| key                     | BYTES     | NULL     | BUCKET KEY |                                                                        |
+| llm_request_json_object | ROW<>     | NULL     |            | The full JSON request document sent to the llm stored as a JSON Object |
+| llm_request_json_string | STRING    | NULL     |            | The full JSON request document sent to the llm stored as a string      |
+| sessionid               | STRING    | NULL     |            | application sessionid used for keeping context                         |
++-------------------------+-----------+----------+------------+------------------------------------------------------------------------+
+```
+   
+Notice that the json object is stored as an array of ROWS.  What does this look like in practice?  Lets insert some sample data and find out.
+   
+```sql
+insert into llm_prompt_test (llm_request_json_object, llm_request_json_string, sessionid)
+  select
+    json_object('role' VALUE role,
+      'content' VALUE content,
+      'products' VALUE cast(products as string)),
+    cast(json_object('role' VALUE role,
+      'content' VALUE content,
+      'products' VALUE cast(products as string))),
+    sessionid
+from user_prompts;
+```
+
 Now we will call the model through flink SQL and insert the answers.   
    
       

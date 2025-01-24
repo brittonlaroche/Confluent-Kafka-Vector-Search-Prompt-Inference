@@ -479,8 +479,10 @@ WITH (
 );
 ```
 
+Did we just create a chat agent in Flink SQL?  In a way yes!  We just created a very simple retail chat agent. A good chat agent is one that will have a very specific customized set of system prompts.    
+   
 All that is left is to store the LLM Response in a new table. Lets create that table.
-
+   
 ```
 CREATE TABLE `llm_answers` (                       
     `role`         STRING,                      
@@ -493,22 +495,22 @@ CREATE TABLE `llm_answers` (
 ```
 
 ### Working with JSON
-
+   
 It is easy to get caught with errors treating a JSON object as a string and treating a string as a JSON object in Flink SQL. This is especially important in communicating with LLM's and other external systems expecting JSON.  In many cases the developers of the underlying systems and fucntions will translate for you. But in some cases you might be stuck scratching your head for hours trying to figure out what went wrong at various levels of the application stack with an obscure error message. We need to learn and practice this skill of converting strings to JSON and vice versa and be familiar with the JSON object functions in Flink SQL. The necessary documentation is here: https://docs.confluent.io/cloud/current/flink/reference/functions/json-functions.html
-
+   
 Lets combine the user prompts into a single flat json document.  We should probably create a user defined function for this but it should be easy enough with just Flink SQL functions.   
-
+   
 ```sql
 select json_object('role' VALUE role,
   'content' VALUE content,
   'products' VALUE cast(products as string)) as request_json
 from user_prompts;
 ```
-
+   
 Simple enough right?  We can store this as a json object in a Flink SQL table right?  Lets try this with a simple test.
-
+   
 We will create a test topic called "llm_prompt_test" and assign it the following schema just like we did with the user_questions topic at the start of this git hub.
-
+   
 Copy and paste the following JSON schema into the llm_prompt_test topic's schema under "data contracts":
 ```json
 {
@@ -534,9 +536,9 @@ Copy and paste the following JSON schema into the llm_prompt_test topic's schema
   "type": "object"
 }
 ```
-
-Now lets describe the llm_prompt_test as its referenced as a table in Flink SQL.
-
+   
+Now lets describe the llm_prompt_test topic and see how it is referenced as a table in Flink SQL.
+   
 ```sql
 > desc `llm_prompt_test`;
 Statement name: cli-2025-01-24-053408-01d49c59-3ceb-4575-be47-801e4486226d
@@ -553,7 +555,7 @@ Statement phase is COMPLETED.
 +-------------------------+-----------+----------+------------+------------------------------------------------------------------------+
 ```
    
-Notice that the json object is stored as an array of ROWS.  What does this look like in practice?  Lets insert some sample data and find out.
+Notice that the json object is stored as an array of ROWS.  What does this look like in practice?  Lets insert some sample data and find out.   
    
 ```sql
 insert into llm_prompt_test (llm_request_json_object, llm_request_json_string, sessionid)
@@ -563,7 +565,7 @@ insert into llm_prompt_test (llm_request_json_object, llm_request_json_string, s
       'products' VALUE cast(products as string)),
     cast(json_object('role' VALUE role,
       'content' VALUE content,
-      'products' VALUE cast(products as string))),
+      'products' VALUE cast(products as string)) as string),
     sessionid
 from user_prompts;
 ```

@@ -610,7 +610,7 @@ CREATE TABLE `llm_prompt_test` (
 Lovely isn't it?  We need to take the JSON object for "user_prompts" and define it as a Flink database table (kafka topic) with nested rows.  To get a JSON object out of the Flink SQL database table we need to process the all nested rows and use the JSON_OBJECT sql function.  At this point you should be asking the question what happens when the schema changes.  If done correctly the Flink table is updated automatically as the kafka topic schema is updated through schema evolution.  But, you still may need to update your json_object sql statements to keep them in sync.  We will discuss this topic in detail in a future github.  For now you know how to convert JSON to String and String to JSON. Strings to JSON object requires some data modeling and proper DDL to get it correct in a Flink SQL table.  Its worth the effort if you are using Flink SQL to process your data as it gives you many advantages, exacting control, proper datatypes and schema governance making work with the connector architecture a breeze. It is much easier to update a single table definition than it is to rewrite multiple batch ETL jobs in multiple environments each with its own point to point data integration.
 
    
-Now we will call the model through flink SQL and insert the answers. A simple test with out user prompts is a good start.
+Now we will call the model through flink SQL and insert the answers. A simple test with out specific product data from the vector search for the user content is a good start.
 
 ```sql
    SELECT sessionid, json_response FROM user_prompts, 
@@ -621,7 +621,10 @@ Now we will call the model through flink SQL and insert the answers. A simple te
      )
    );			 
 ```
-      
+   
+Now lets test with relevant product data.
+   
+         
 ```
 insert into llm_answers (role, content, sessionid, json_response) 
 SELECT role, content, sessionid, json_response FROM user_prompts, 

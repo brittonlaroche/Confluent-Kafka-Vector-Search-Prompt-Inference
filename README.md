@@ -595,18 +595,31 @@ Sink schema:  [key: BYTES, llm_request_json_object: ROW<>, llm_request_json_stri
 
 The json object we defined as an "object" in the schema is just an array of bytes. We have to define all of the columns in each row.  We did this for the user_prompts products field where we defined the products column as a row type with one column named content.  If you learn anything from this github stop using the name content everywhere for everything.  It is true that "content" is what you send to the vector embedding service and to the LLM. But in some cases that content may describe a user or a user question and in other cases a product. Perhaps "user_content" and "product_content" is better than just the word "content"   
 
-Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  The drop the topic and start over by creating a Flink SQL table that defines the elements in the JSON Object.
+Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  Then delete the topic "llm_prompt_test" from the configuration tab, and start over by creating a Flink SQL table that defines the elements in the JSON Object.
 
+```
+CREATE TABLE `llm_prompt_test` ( 
+    `llm_request_json_object   ARRAY<ROW<`role` STRING, `content` STRING, `sessionid` STRING, products ARRAY<ROW<`content` STRING>>>
+    `llm_request_json_string`  STRING,                      
+    `sessionid`                STRING
+) WITH (
+  'value.format' = 'json-registry'
+);
+```
+
+Lovely isn't it?  We need to take the JSON object for "user_prompts" and define it as a Flink database table (kafka topic) with nested rows.  To get a JSON object out of the Flink SQL database table we need to process the all nested rows and use the JSON_OBJECT sql function.  At this point you should be asking the question what happens when the schema changes.  If done correctly you can update the Flink table as the kafka topic schema is updated.  But you may need to update your json object sql statements to keep in sync.  We will discuss this topic in detail in a future github.  For now you know how to convert JSON to String and String to JSON. Strings to JSON object requires some data modeling and proper DDL to get it correct in a Flink SQL table.  Its worth the effort if you are using Flink SQL to process your data as it gives you many advantages, exacting control, proper datatypes and schema governance making work with the connector architecture a breeze. It is much easier to update a single table definition than it is to rewrite multiple batch ETL jobs in multiple environments each with its own point to point data integration.
+
+   
 Now we will call the model through flink SQL and insert the answers.   
    
       
 ```
 insert into llm_answers (role, content, sessionid, json_response) 
 SELECT role, content, sessionid, json_response FROM user_prompts, 
-LATERAL TABLE(ML_PREDICT('retail_assistant', concat_ws(' ', 
-      ', role: '||role,
-      ', content: '||content,	
-      ', products: '||cast(products as string))			
+LATERAL TABLE(ML_PREDICT('retail_assistant', json_object(
+      'role' VALUE role,
+      'content' VALUE content,
+      'products' VALUE cast(products as string))			
     )
   );
 ```   

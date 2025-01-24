@@ -315,7 +315,7 @@ Error: can't fetch results. Statement phase is: FAILED
 Error details: Connection 'mongodb-connection' not found
 ```  
 
-This error occurs because we created the connection in a different flink SQL environment.  Lets be safe and use the correct environment.
+This error occurs sometimes because we created the connection in a different flink SQL environment.  Lets be safe and use the correct environment varible from our flink SQL environment.  We can get it from the Confluent Cloud web console.  Navigate to the enviromnment of your cluster and at that level look at the Flink SQL tab to find the exact value.  Or extract it from the Flink SQL CLI or Flink SQL workspace.
       
 ```
 confluent flink connection create mongodb-fed-search-connection \
@@ -569,6 +569,33 @@ insert into llm_prompt_test (llm_request_json_object, llm_request_json_string, s
     sessionid
 from user_prompts;
 ```
+
+Here is the result:
+
+```sql
+insert into llm_prompt_test (llm_request_json_object, llm_request_json_string, sessionid)
+  select
+    json_object('role' VALUE role,
+      'content' VALUE content,
+      'products' VALUE cast(products as string)),
+    cast(json_object('role' VALUE role,
+      'content' VALUE content,
+      'products' VALUE cast(products as string)) as string),
+    sessionid
+from user_prompts;
+Statement name: cli-2025-01-24-060904-3f03281c-f491-4ff3-b7d5-6577651a03d6
+Submitting statement...Error: statement submission failed
+Error: can't fetch results. Statement phase is: FAILED
+Error details: Column types of query result and sink for 'GenAI-POC.POC.llm_prompt_test' do not match.
+Cause: Incompatible types for sink column 'llm_request_json_object' at position 1.
+
+Query schema: [EXPR$0: BYTES, EXPR$1: STRING NOT NULL, EXPR$2: STRING NOT NULL, sessionid: STRING]
+Sink schema:  [key: BYTES, llm_request_json_object: ROW<>, llm_request_json_string: STRING, sessionid: STRING]
+```
+
+The json object we defined as an "object" in the schema is just an array of bytes. We have to define all of the columns in each row.  We did this for the user_prompts products field where we defined the products column as a row type with one column named content.  If you learn anything from this github stop using the name content everywhere for everything.  It is true that "content" is what you send to the vector embedding service and to the LLM. But in some cases that content may describe a user or a user question and in other cases a product. Perhaps "user_content" and "product_content" is better than just the word "content"   
+
+Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  The drop the topic and start over by creating a Flink SQL table that defines the elements in the JSON Object.
 
 Now we will call the model through flink SQL and insert the answers.   
    

@@ -466,7 +466,7 @@ confluent flink connection create openai-llm-connection \
 Now lets create the model to pass in parameters to the OpenAI LLM to make product recommendations based on the users questions. Issue the following create model command in Flink SQL
    
 ```
-CREATE MODEL retailassitant
+CREATE MODEL retail_assistant
 INPUT(prompts STRING)
 OUTPUT(json_response STRING)
 COMMENT 'retail assistant model'
@@ -492,13 +492,13 @@ CREATE TABLE `llm_answers` (
 );
 ```
      
-Lets combine the user prompts into a single flat json document.  We should probably create a suer defined function for this but it should be easy enough with just SQL functions.   
+Lets combine the user prompts into a single flat json document.  We should probably create a user defined function for this but it should be easy enough with just Flink SQL functions.   
 
 ```sql
-select json_unquote(concat_ws(' ',
-      '"role": '||'"'||role||'"',
-      ', "content": '||'"'||content||'"',
-      ', "products": '||'"'||cast(products as string)||'"')) as request_str from user_prompts;
+select json_object('role' VALUE role,
+  'content' VALUE content,
+  'products' VALUE cast(products as string)) as request_json
+from user_prompts;
 ```
            
 Now we will call the model through flink SQL and insert the answers.   
@@ -507,7 +507,7 @@ Now we will call the model through flink SQL and insert the answers.
 ```
 insert into llm_answers (role, content, sessionid, json_response) 
 SELECT role, content, sessionid, json_response FROM user_prompts, 
-LATERAL TABLE(ML_PREDICT('retailassitant', concat_ws(' ', 
+LATERAL TABLE(ML_PREDICT('retail_assistant', concat_ws(' ', 
       ', role: '||role,
       ', content: '||content,	
       ', products: '||cast(products as string))			

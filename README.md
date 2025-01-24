@@ -616,7 +616,7 @@ Now we will call the model through flink SQL and insert the answers. A simple te
    SELECT sessionid, json_response FROM user_prompts, 
    LATERAL TABLE(ML_PREDICT('retail_assistant',
        json_object( 'role' VALUE 'user',
-         'content' VALUE 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?"
+         'content' VALUE 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
        )
      )
    );			 

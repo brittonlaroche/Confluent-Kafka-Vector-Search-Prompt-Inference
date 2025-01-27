@@ -621,7 +621,7 @@ Now we will call the model through flink SQL and insert the answers. A simple te
    );			 
 ```
 
-Please note the following request format needs to be followed
+Please note when calling a curl command the following request format needs to be followed:
 ```
 {
   "model": "gpt-3.5-turbo",
@@ -634,7 +634,7 @@ Please note the following request format needs to be followed
 }
 ```
 
-To Test your API directly with CURL use the following command.  
+To Test your API directly with CURL use the following command I used the format from above but flattened it to a single line.  
 ```
 curl https://api.openai.com/v1/chat/completions \
  -H "Content-Type: application/json" \
@@ -642,7 +642,7 @@ curl https://api.openai.com/v1/chat/completions \
  -d '{ "model": "gpt-4", "messages": [{"role": "user","content": "What are some good recommendtions golf shirts at a Macys store in Dallas Texas?"}]  }'
 ```
 
-Its important to check the model being used if you had multiple versions. Docmentation [here](https://docs.confluent.io/cloud/current/flink/reference/statements/create-model.html#model-versioning)   
+When using FLink SQL to call the LLM its important to check the model being used, especially if you have multiple versions. Docmentation [here](https://docs.confluent.io/cloud/current/flink/reference/statements/create-model.html#model-versioning)   
    
 If you get a ```Received bad response code 404``` error listed in the web Flink SQL console UI, you can test the version of the model being used with the following commands:
 
@@ -704,6 +704,8 @@ ALTER MODEL <model-name> SET ('default_version'='<version>');
 ALTER MODEL `retail_assistant` SET ('default_version'='4');
 
 ```
+
+PLEASE NOTE THE DEFAULT MODEL IS ALWAYS THE FIRST MODEL UNTIL YOU SET THE DEFAULT DIRECTLY.  If you goof the first model and create it again, you will always be using the first goofed model and this will confuse you like there is no tomorrow.
 
 Now lets test with relevant product data.
    

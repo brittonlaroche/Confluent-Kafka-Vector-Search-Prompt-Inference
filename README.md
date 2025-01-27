@@ -474,7 +474,7 @@ WITH (
   'provider' = 'openai',
   'task' = 'classification',
   'openai.connection' = 'openai-llm-connection',
-  'openai.model_version' = 'gpt-4.0',
+  'openai.model_version' = 'gpt-4o',
   'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items.'
 );
 ```
@@ -593,7 +593,7 @@ Query schema: [EXPR$0: BYTES, EXPR$1: STRING NOT NULL, EXPR$2: STRING NOT NULL, 
 Sink schema:  [key: BYTES, llm_request_json_object: ROW<>, llm_request_json_string: STRING, sessionid: STRING]
 ```
 
-The json object we defined as an "object" in the schema is just an array of bytes. We have to define all of the columns in each row.  We did this for the user_prompts products field where we defined the products column as a row type with one column named content.  If you learn anything from this github its probably stop using the name content everywhere for everything.  It is true that "content" is what you send to the vector embedding service and to the LLM. But in some cases that content may describe a user or a user question and in other cases a product. Perhaps "user_content" and "product_content" is better than just the word "content"   
+The json object we defined as an "object" in the schema is just an array of rows. We have to define all of the columns in each row.  We did this for the user_prompts products field where we defined the products column as a row type with one column named content.  If you learn anything from this github its probably stop using the name content everywhere for everything.  It is true that "content" is what you send to the vector embedding service and to the LLM. But in some cases that content may describe a user or a user question and in other cases a product. Perhaps "user_content" and "product_content" is better than just the word "content"   
 
 The seconnd important thing to learn is that the Flink SQL json_object returns a string representation of a JSON document, not an actual json object. Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  Then delete the topic "llm_prompt_test" from the configuration tab, and start over by creating a Flink SQL table that defines the elements in the JSON Object.
 

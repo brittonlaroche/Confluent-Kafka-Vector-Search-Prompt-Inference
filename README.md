@@ -648,6 +648,11 @@ If you get a ```Received bad response code 404``` error listed in the web Flink 
 
 ```sql
 describe model `retail_assistant`;
+describe model `retail_assistant$all`;
+```
+
+```sql
+describe model `retail_assistant`;
 Statement name: cli-2025-01-27-151853-d3fa3a0f-03e9-4dbb-b4c3-aff8dca670e6
 Submitting statement...Statement successfully submitted.
 Waiting for statement to be ready. Statement phase is COMPLETED.
@@ -690,6 +695,14 @@ SELECT sessionid, json_response FROM user_prompts,
    LATERAL TABLE(ML_PREDICT('retail_assistant$4', 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
      )
    );
+```
+
+Or you can set the deault model with the following command:
+```sql
+ALTER MODEL <model-name> SET ('default_version'='<version>');
+
+ALTER MODEL `retail_assistant` SET ('default_version'='4');
+
 ```
 
 Now lets test with relevant product data.

@@ -615,11 +615,8 @@ Eeven with the automatic updates to the table definition, we need to update our 
 Now we will call the model through flink SQL and insert the answers. A simple test with out specific product data from the vector search for the user content is a good start.
 
 ```sql
-   SELECT sessionid, json_response FROM user_prompts, 
-   LATERAL TABLE(ML_PREDICT('retail_assistant', '"messages": ['||
-       json_object( 'role' VALUE 'user',
-         'content' VALUE 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
-       ) || ']'
+   SELECT sessionid, json_response FROM user_prompts,
+   LATERAL TABLE(ML_PREDICT('retail_assistant', 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
      )
    );			 
 ```
@@ -637,7 +634,7 @@ Please note the following request format needs to be followed
 }
 ```
 
-To Test you API directly with CURL use the following command.  
+To Test your API directly with CURL use the following command.  
 ```
 curl https://api.openai.com/v1/chat/completions \
  -H "Content-Type: application/json" \
@@ -645,6 +642,55 @@ curl https://api.openai.com/v1/chat/completions \
  -d '{ "model": "gpt-4", "messages": [{"role": "user","content": "What are some good recommendtions golf shirts at a Macys store in Dallas Texas?"}]  }'
 ```
 
+Its important to check the model being used if you had multiple versions. Docmentation [here](https://docs.confluent.io/cloud/current/flink/reference/statements/create-model.html#model-versioning)   
+   
+If you get a ```Received bad response code 404``` error listed in the web Flink SQL console UI, you can test the version of the model being used with the following commands:
+
+```sql
+describe model `retail_assistant`;
+Statement name: cli-2025-01-27-151853-d3fa3a0f-03e9-4dbb-b4c3-aff8dca670e6
+Submitting statement...Statement successfully submitted.
+Waiting for statement to be ready. Statement phase is COMPLETED.
+Statement phase is COMPLETED.
++-----------+------------------+--------------------+--------------------------+------------------------------------------------+------------------------+
+| VersionId | IsDefaultVersion |       Inputs       |         Outputs          |                    Options                     |        Comment         |
++-----------+------------------+--------------------+--------------------------+------------------------------------------------+------------------------+
+| 1         | true             | (                  | (                        | (                                              | retail assistant model |
+|           |                  |   `prompts` STRING |   `json_response` STRING |   'openai.connection'='openai-llm-connection', |                        |
+|           |                  | )                  | )                        |   'openai.model_version'='gpt-4.0'...          |                        |
++-----------+------------------+--------------------+--------------------------+------------------------------------------------+------------------------+
+> describe model `retail_assistant$all`;
+Statement name: cli-2025-01-27-151956-983a630a-2f40-4425-aa8f-27d140f7d2eb
+Submitting statement...Statement successfully submitted.
+Waiting for statement to be ready. Statement phase is COMPLETED.
+Statement phase is COMPLETED.
++-----------+------------------+--------------------+--------------------------+-------------------------------------------------+------------------------+
+| VersionId | IsDefaultVersion |       Inputs       |         Outputs          |                     Options                     |        Comment         |
++-----------+------------------+--------------------+--------------------------+-------------------------------------------------+------------------------+
+| 1         | true             | (                  | (                        | (                                               | retail assistant model |
+|           |                  |   `prompts` STRING |   `json_response` STRING |   'openai.connection'='openai-llm-connection',  |                        |
+|           |                  | )                  | )                        |   'openai.model_version'='gpt-4.0'...           |                        |
+| 2         | false            | (                  | (                        | (                                               | retail assistant model |
+|           |                  |   `prompts` STRING |   `json_response` STRING |   'openai.connection'='openai-llm-connection',  |                        |
+|           |                  | )                  | )                        |   'openai.model_version'='gpt-4o',...           |                        |
+| 3         | false            | (                  | (                        | (                                               | retail assistant model |
+|           |                  |   `prompts` STRING |   `json_response` STRING |   'openai.connection'='openai-llm-connection',  |                        |
+|           |                  | )                  | )                        |   'openai.model_version'='gpt-4',               |                        |
+|           |                  |                    |                          | ...                                             |                        |
+| 4         | false            | (                  | (                        | (                                               | retail assistant model |
+|           |                  |   `prompts` STRING |   `json_response` STRING |   'openai.connection'='openai-llm-connection2', |                        |
+|           |                  | )                  | )                        |   'openai.model_version'='gpt-3.5...            |                        |
++-----------+------------------+--------------------+--------------------------+-------------------------------------------------+------------------------+ 
+```
+
+You can use a specific model number like number 4 with the command:
+
+```sql
+SELECT sessionid, json_response FROM user_prompts, 
+   LATERAL TABLE(ML_PREDICT('retail_assistant$4', 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
+     )
+   );
+```
 
 Now lets test with relevant product data.
    

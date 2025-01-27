@@ -688,7 +688,7 @@ Statement phase is COMPLETED.
 +-----------+------------------+--------------------+--------------------------+-------------------------------------------------+------------------------+ 
 ```
 
-You can use a specific model number like number 4 with the command:
+You can use a specific model number like number 4 with the sql statement:
 
 ```sql
 SELECT sessionid, json_response FROM user_prompts, 

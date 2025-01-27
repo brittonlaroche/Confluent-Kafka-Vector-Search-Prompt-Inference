@@ -616,12 +616,25 @@ Now we will call the model through flink SQL and insert the answers. A simple te
 
 ```sql
    SELECT sessionid, json_response FROM user_prompts, 
-   LATERAL TABLE(ML_PREDICT('retail_assistant',
+   LATERAL TABLE(ML_PREDICT('retail_assistant', '"messages": ['||
        json_object( 'role' VALUE 'user',
          'content' VALUE 'What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?'
-       )
+       ) || ']'
      )
    );			 
+```
+
+Please note the following request format needs to be followed
+```
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello, how are you?"
+    }
+  ]
+}
 ```
 
 To Test you API directly with CURL use the following command.  
@@ -629,9 +642,10 @@ To Test you API directly with CURL use the following command.
 curl https://api.openai.com/v1/chat/completions \
  -H "Content-Type: application/json" \
  -H "Authorization: Bearer $OPENAI_API_KEY" \
- -d '{ "role": "user","content": "What are some good products for mens golf shirts in size large at a reasonable price at a Macys store in Dallas Texas?" , "model": "gpt-4" }' > test.txt
+ -d '{ "model": "gpt-4", "messages": [{"role": "user","content": "What are some good recommendtions golf shirts at a Macys store in Dallas Texas?"}]  }'
 ```
-   
+
+
 Now lets test with relevant product data.
    
          

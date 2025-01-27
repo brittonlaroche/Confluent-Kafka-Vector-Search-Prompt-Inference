@@ -595,7 +595,7 @@ Sink schema:  [key: BYTES, llm_request_json_object: ROW<>, llm_request_json_stri
 
 The json object we defined as an "object" in the schema is just an array of rows. We have to define all of the columns in each row.  We did this for the user_prompts products field where we defined the products column as a row type with one column named content.  If you learn anything from this github its probably stop using the name content everywhere for everything.  It is true that "content" is what you send to the vector embedding service and to the LLM. But in some cases that content may describe a user or a user question and in other cases a product. Perhaps "user_content" and "product_content" is better than just the word "content"   
 
-The seconnd important thing to learn is that the Flink SQL json_object returns a string representation of a JSON document, not an actual json object. Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  Then delete the topic "llm_prompt_test" from the configuration tab, and start over by creating a Flink SQL table that defines the elements in the JSON Object.
+The seconnd important thing to learn is that the Flink SQL json_object returns a STRING representation of a JSON document, not an actual json object. Lets try that again. We need to delete the entire schema and start over. Go back into the data contract tab of the llm_prompt_test topic and select the json schema. In the upper right next to the "Evlove" button, select the three vertical dots icon for the actions drop list.  Delete the entire subject including all versions.  Then delete the topic "llm_prompt_test" from the configuration tab, and start over by creating a Flink SQL table that defines the elements in the JSON Object.
 
 ```
 CREATE TABLE `llm_prompt_test` (
@@ -611,6 +611,16 @@ Lovely isn't it?  We need to take the JSON object for "user_prompts" and define 
    
 Eeven with the automatic updates to the table definition, we need to update our json_object sql statements to keep them in sync.  We will discuss this topic in detail in a future github.  For now you know how to convert JSON to String and String to JSON. Strings to JSON object requires some data modeling and proper DDL to get it correct in a Flink SQL table.  Its worth the effort if you are using Flink SQL to process your data as it gives you many advantages, exacting control, proper datatypes and schema governance making work with the connector architecture a breeze. It is much easier to update a single table definition than it is to rewrite multiple batch ETL jobs in multiple environments each with its own point to point data integration.
 
+To insert data we have to do the following sort of thing:
+```sql
+insert into user_prompts (role, content, sessionid, products) 
+values (
+  'user', 
+  'Find me a pair of mens formal shoes in medium size.', 
+  'abc256', 
+  ARRAY[ROW('Blue Medium Adult Male Shoes, product_id: 101'), ROW('Blue Medium Adult Female Shoes, product_id: 102')]
+);
+```
    
 Now we will call the model through flink SQL and insert the answers. A simple test with out specific product data from the vector search for the user content is a good start.
 

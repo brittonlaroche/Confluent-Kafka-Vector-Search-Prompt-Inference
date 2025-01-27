@@ -474,7 +474,7 @@ WITH (
   'provider' = 'openai',
   'task' = 'classification',
   'openai.connection' = 'openai-llm-connection',
-  'openai.model_version' = 'gpt-4o',
+  'openai.model_version' = 'gpt-4',
   'openai.system_prompt' = 'You are a retail assistant helping the user select clothing items.'
 );
 ```
